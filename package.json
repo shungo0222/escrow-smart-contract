@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy:mumbai": "npx hardhat run scripts/deploy.ts --network mumbai"
+    "deploy:mumbai": "npx hardhat run scripts/deploy.ts --network mumbai",
+    "size": "npx hardhat size-contracts"
   },
   "keywords": [],
   "author": "",
