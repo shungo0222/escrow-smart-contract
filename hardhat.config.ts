@@ -6,11 +6,22 @@ dotenv.config();
 
 const {
   POLYGONSCAN_API_KEY,
-  POLYGON_API_KEY,
+  POLYGON_URL,
   POLYGON_PRIVATE_KEY,
-  MUMBAI_API_KEY,
+  MUMBAI_URL,
   MUMBAI_PRIVATE_KEY
 } = process.env;
+
+if (
+  !POLYGONSCAN_API_KEY || 
+  !POLYGON_URL || 
+  !POLYGON_PRIVATE_KEY || 
+  !MUMBAI_URL || 
+  !MUMBAI_PRIVATE_KEY
+) {
+  console.error("Please make sure your .env file is properly configured");
+  process.exit(1);
+}
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -24,11 +35,11 @@ const config: HardhatUserConfig = {
   },
   networks: {
     polygon: {
-      url: `https://polygon-mainnet.g.alchemy.com/v2/${POLYGON_API_KEY}`,
+      url: POLYGON_URL,
       accounts: [`${POLYGON_PRIVATE_KEY}`],
     },
     mumbai: {
-      url: `https://polygon-mumbai.g.alchemy.com/v2/${MUMBAI_API_KEY}`,
+      url: MUMBAI_URL,
       accounts: [`${MUMBAI_PRIVATE_KEY}`],
     },
     hardhat: {
