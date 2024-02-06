@@ -2,6 +2,7 @@ import "@nomicfoundation/hardhat-toolbox";
 import hre from "hardhat";
 import { writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
+import { escrowDeployParams, forwarderDeployParams } from "../config/deployParameters";
 
 async function deployContracts() {
   const [deployer] = await hre.ethers.getSigners();
@@ -11,7 +12,7 @@ async function deployContracts() {
 
   // ERC2771Forwarderのデプロイ
   const Forwarder = await hre.ethers.getContractFactory("ERC2771Forwarder");
-  const forwarder = await Forwarder.deploy("ERC2771Forwarder");
+  const forwarder = await Forwarder.deploy(forwarderDeployParams.name);
   const forwarderAddress = await forwarder.getAddress();
   console.log(`Forwarder deployed to: ${forwarderAddress}`);
 
@@ -19,11 +20,11 @@ async function deployContracts() {
   const Escrow = await hre.ethers.getContractFactory("Escrow");
   const escrow = await Escrow.deploy(
     forwarderAddress,
-    1, // minSubmissionDeadlineDays
-    7, // minReviewDeadlineDays
-    7, // minPaymentDeadlineDays
-    270, // lockPeriodDays
-    14  // deadlineExtensionPeriodDays
+    escrowDeployParams.minSubmissionDeadlineDays,
+    escrowDeployParams.minReviewDeadlineDays,
+    escrowDeployParams.minPaymentDeadlineDays,
+    escrowDeployParams.lockPeriodDays,
+    escrowDeployParams.deadlineExtensionPeriodDays
   );
   const escrowAddress = await escrow.getAddress();
   console.log(`Escrow deployed to: ${escrowAddress}`);

@@ -4,6 +4,7 @@
 
 import deployContracts from "./deployContracts";
 import verifyContract from "./verifyContract";
+import { forwarderDeployParams, escrowDeployParams } from "../config/deployParameters";
 
 async function main() {
   // Deployment of test tokens is currently unnecessary, hence the following line is commented out.
@@ -14,8 +15,15 @@ async function main() {
   console.log(`Waiting for polygon scan to catch up...`);
   await new Promise(resolve => setTimeout(resolve, 60000)); // Wait 60 seconds
 
-  await verifyContract(forwarderAddress, ["ERC2771Forwarder"]);
-  await verifyContract(escrowAddress, [forwarderAddress, 1, 7, 7, 270, 14]);
+  await verifyContract(forwarderAddress, [forwarderDeployParams.name]);
+  await verifyContract(escrowAddress, [
+    forwarderAddress,
+    escrowDeployParams.minSubmissionDeadlineDays,
+    escrowDeployParams.minReviewDeadlineDays,
+    escrowDeployParams.minPaymentDeadlineDays,
+    escrowDeployParams.lockPeriodDays,
+    escrowDeployParams.deadlineExtensionPeriodDays,
+  ]);
 }
 
 main().catch((error) => {
