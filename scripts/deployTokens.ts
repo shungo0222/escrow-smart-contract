@@ -1,6 +1,7 @@
 import "@nomicfoundation/hardhat-toolbox";
 import hre from "hardhat";
-import { writeFileSync } from "fs";
+import { writeFileSync, mkdirSync } from "fs";
+import { join } from "path";
 
 async function deployTokens() {
   const [deployer] = await hre.ethers.getSigners();
@@ -46,7 +47,9 @@ async function deployTokens() {
     deployedTokens[token.symbol] = customToken.address;
   }
 
-  const outputFile = `deployedTokens-${networkName}.json`;
+  const deploymentDir = "deployments";
+  mkdirSync(deploymentDir, { recursive: true });
+  const outputFile = join(deploymentDir, `deployedTokens-${networkName}.json`);
   writeFileSync(outputFile, JSON.stringify(deployedTokens, null, 2));
 
   console.log(`Deployed tokens addresses have been saved to ${outputFile}`);
