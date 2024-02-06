@@ -4,8 +4,9 @@ import { writeFileSync } from "fs";
 
 async function main() {
   const [deployer] = await hre.ethers.getSigners();
+  const networkName = hre.network.name;
 
-  console.log("Deploying contracts with the account:", deployer.address);
+  console.log(`Deploying contracts with the account: ${deployer.address} on ${networkName}`);
 
   // // トークンの設定
   // const tokens = [
@@ -61,12 +62,13 @@ async function main() {
   const escrowAddress = await escrow.getAddress();
   console.log(`Escrow deployed to: ${escrowAddress}`);
 
-  writeFileSync("deploy.mumbai.json", JSON.stringify({
+  const outputFile = `deploy.${networkName}.json`;
+  writeFileSync(outputFile, JSON.stringify({
     ERC2771Forwarder: forwarderAddress,
     Escrow: escrowAddress,
   }, null, 2));
 
-  console.log("Waiting for Polygonscan to catch up...");
+  console.log(`Waiting for ${networkName} scan to catch up...`);
   await new Promise(resolve => setTimeout(resolve, 60000)); // Wait 60 seconds
 
   await hre.run("verify:verify", {
