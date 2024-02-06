@@ -1,6 +1,7 @@
 import "@nomicfoundation/hardhat-toolbox";
 import hre from "hardhat";
-import { writeFileSync } from "fs";
+import { writeFileSync, mkdirSync } from "fs";
+import { join } from "path";
 
 async function deployContracts() {
   const [deployer] = await hre.ethers.getSigners();
@@ -27,7 +28,9 @@ async function deployContracts() {
   const escrowAddress = await escrow.getAddress();
   console.log(`Escrow deployed to: ${escrowAddress}`);
 
-  const outputFile = `deployedContracts-${networkName}.json`;
+  const deploymentDir = "deployments";
+  mkdirSync(deploymentDir, { recursive: true });
+  const outputFile = join(deploymentDir, `deployedContracts-${networkName}.json`);
   writeFileSync(outputFile, JSON.stringify({
     ERC2771Forwarder: forwarderAddress,
     Escrow: escrowAddress,
